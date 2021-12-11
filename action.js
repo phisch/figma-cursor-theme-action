@@ -30,31 +30,32 @@ try {
     const fileNames = [];
 
     function findExports(node) {
-      node.exportSettings.forEach((settings) => {
-        if (!Object.prototype.hasOwnProperty.call(exports, settings.format)) {
-          exports[settings.format] = {};
-        }
-        if (!Object.prototype.hasOwnProperty.call(
-          exports[settings.format],
-          settings.constraint.value,
-        )) {
-          exports[settings.format][settings.constraint.value] = {};
-        }
-
-        const format = settings.format.toLowerCase();
-        const fileName = settings.suffix ? `${node.name}_${settings.suffix}.${format}` : `${node.name}.${format}`;
-
-        if (fileNames.includes(fileName)) {
-          throw Error(`The figma file ${FIGMA_FILE_KEY} contains conflicting exports that try to export as '${fileName}'. Resolve conflicting exports!`);
-        }
-
-        fileNames.push(fileName);
-
-        exports[settings.format][settings.constraint.value][node.id] = {
-          file: path.join(EXPORT_DIRECTORY, fileName),
-        };
-      });
-
+      if (Array.isArray(node.exportSettings)) {
+        node.exportSettings.forEach((settings) => {
+          if (!Object.prototype.hasOwnProperty.call(exports, settings.format)) {
+            exports[settings.format] = {};
+          }
+          if (!Object.prototype.hasOwnProperty.call(
+            exports[settings.format],
+            settings.constraint.value,
+          )) {
+            exports[settings.format][settings.constraint.value] = {};
+          }
+  
+          const format = settings.format.toLowerCase();
+          const fileName = settings.suffix ? `${node.name}_${settings.suffix}.${format}` : `${node.name}.${format}`;
+  
+          if (fileNames.includes(fileName)) {
+            throw Error(`The figma file ${FIGMA_FILE_KEY} contains conflicting exports that try to export as '${fileName}'. Resolve conflicting exports!`);
+          }
+  
+          fileNames.push(fileName);
+  
+          exports[settings.format][settings.constraint.value][node.id] = {
+            file: path.join(EXPORT_DIRECTORY, fileName),
+          };
+        });
+      }
       if (node.children) {
         node.children.forEach(findExports);
       }
