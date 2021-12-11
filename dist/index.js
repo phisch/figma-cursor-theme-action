@@ -4732,7 +4732,7 @@ try {
     const fileNames = [];
 
     function findExports(node) {
-      node.exportSettings?.forEach((settings) => {
+      node.exportSettings.forEach((settings) => {
         if (!Object.prototype.hasOwnProperty.call(exports, settings.format)) {
           exports[settings.format] = {};
         }
