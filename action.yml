@@ -1,5 +1,5 @@
 name: 'Figma Export Action'
-description: 'GitHub Action that renders and downloads all defined exports of a Figma file that doesn't contain any conflicting exports.'
+description: 'GitHub Action that renders and downloads all defined exports of a Figma file that doesn''t contain any conflicting exports.'
 inputs:
   figma_access_token:
     description: 'Your personal figma access token.'
