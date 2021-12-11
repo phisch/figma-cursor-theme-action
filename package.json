@@ -4,7 +4,8 @@
   "description": "GitHub Action that renders and downloads all defined exports of a Figma file that doesn't contain any conflicting exports.",
   "main": "action.js",
   "scripts": {
-    "start": "node action.js"
+    "start": "node action.js",
+    "build": "ncc build action.js -o dist --source-map --license licenses.txt"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.0"
   }
 }
