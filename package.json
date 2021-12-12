@@ -4,8 +4,11 @@
   "description": "GitHub Action that renders and downloads all defined exports of a Figma file that doesn't contain any conflicting exports.",
   "main": "action.js",
   "scripts": {
-    "start": "node action.js",
-    "build": "ncc build action.js -o dist --source-map --license licenses.txt"
+    "build-figma-export": "ncc build figma-export/action.js -o dist/figma-export --minify --source-map --license licenses.txt",
+    "build-theme-generator": "ncc build theme-generator/action.js -o dist/theme-generator --minify --source-map --license licenses.txt",
+    "build": "npm run build-figma-export && npm run build-theme-generator",
+    "figma-export": "node figma-export/action.js",
+    "theme-generator": "node theme-generator/action.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +28,9 @@
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.0",
-    "figma-js": "^1.14.0"
+    "figma-js": "^1.14.0",
+    "image-pixels": "^2.2.2",
+    "xcursor": "^1.1.7"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.33.0"
