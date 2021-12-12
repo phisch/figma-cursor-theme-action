@@ -1,0 +1,25 @@
+name: 'Cursor Theme Generator'
+description: 'Generates a cursor theme from cursor PNG sprites.'
+inputs:
+  sprite_directory:
+    description: 'Directory containing PNG cursor sprites.'
+    required: false
+    default: 'build/export'
+  output_directory:
+    description: 'Directory the cursor theme will be generated to.'
+    required: false
+    default: 'build/cursor-theme'
+  theme_name:
+    description: 'Name of the cursor theme.'
+    required: true
+    default: 'Cursor Theme'
+  theme_comment:
+    description: 'Comment or description for the cursor theme.'
+    required: false
+    default: ''
+
+  
+
+runs:
+  using: 'node12'
+  main: 'dist/cursor-config-generator/index.js'
