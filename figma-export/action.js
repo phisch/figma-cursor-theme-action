@@ -58,18 +58,18 @@ try {
     core.info(`Collecting information about the Figma file ${FIGMA_FILE_KEY}.`);
     iterate(file.data.document);
 
-    core.info(`Found ${Object.keys(exports).length} export formats.`);
+    core.info(`Found exports for formats: ${Object.keys(exports).join(', ')}`);
 
     Object.keys(exports).forEach(format => {
-      core.info(`Found ${Object.keys(exports[format]).length} ${format} scales.`);
+      core.info(`Need to export scales ${Object.keys(exports[format]).join('x, ')} for ${format} format.`);
       Object.keys(exports[format]).forEach(scale => {
-        core.info(`Requesting ${format} exports for ${scale} scale.`);
+        core.info(`Requesting ${format} exports for scale ${scale}x.`);
         client.fileImages(FIGMA_FILE_KEY, {
           ids: Object.keys(exports[format][scale]),
           scale: scale,
           format: format.toLowerCase()
         }).then(imagesResponse => {
-          core.info(`Downloading ${imagesResponse.data.images.length} images for ${format} at ${scale} scale.`);
+          core.info(`Downloading ${Object.keys(imagesResponse.data.images).length} images for ${format} format at scale ${scale}x.`);
           Object.keys(imagesResponse.data.images).forEach(id => {
             const url = imagesResponse.data.images[id];
             core.debug(`Downloading ${url} to ${exports[format][scale][id].file}.`);

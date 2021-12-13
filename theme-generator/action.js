@@ -72,7 +72,7 @@ var Encoder = require('xcursor').Encoder;
       fs.mkdirSync(path.join(OUTPUT_DIRECTORY, slug, 'cursors'), { recursive: true });
 
       if (variant !== 'default') {
-        core.info(`Symlinking missing cursors from default to variant ${variant}`);
+        core.info(`Symlinking missing cursors from default to ${variant} variant.`);
         for (const cursorName in cursors.default) {
           if (!cursors[variant][cursorName]) {
             core.debug(`Symlinking ${cursorName} from default to variant ${variant}`);
