@@ -11,8 +11,6 @@ var Encoder = require('xcursor').Encoder;
     const THEME_NAME = core.getInput('theme_name');
     const THEME_COMMENT = core.getInput('theme_comment');
 
-    fs.mkdirSync(path.join(OUTPUT_DIRECTORY, 'cursors'), { recursive: true });
-
     const cursors = {};
   
     const files = fs.readdirSync(SPRITE_DIRECTORY);
@@ -22,6 +20,14 @@ var Encoder = require('xcursor').Encoder;
       }
 
       let image = await pixels(path.join(SPRITE_DIRECTORY, file));
+
+      // x11 cursors require BGRA data instead of RGBA
+      for (let i = 0; i < image.data.length; i += 4) {
+        let r = image.data[i];
+        let b = image.data[i + 2];
+        image.data[i] = b;
+        image.data[i + 2] = r;
+      }
 
       if (image.width !== image.height) {
         throw new Error(`Image ${file} is not a square!`);
@@ -34,10 +40,11 @@ var Encoder = require('xcursor').Encoder;
         accumulator[key] = value;
         return accumulator;
       }, {});
-  
-      cursors[properties.name] = cursors[properties.name] || {};
-      cursors[properties.name][image.width] = cursors[properties.name][image.width] || {};
-      cursors[properties.name][image.width][properties.frame] = {
+      
+      cursors[properties.variant] = cursors[properties.variant] || {};
+      cursors[properties.variant][properties.name] = cursors[properties.variant][properties.name] || {};
+      cursors[properties.variant][properties.name][image.width] = cursors[properties.variant][properties.name][image.width] || {};
+      cursors[properties.variant][properties.name][image.width][properties.frame] = {
         type: image.width,
         xhot: properties.hotspot_x,
         yhot: properties.hotspot_y,
@@ -46,21 +53,53 @@ var Encoder = require('xcursor').Encoder;
       };
     }
 
-    Object.entries(cursors).forEach(([name, sizes]) => {
-      const images = [];
-      Object.entries(sizes).forEach(([size, frames]) => {
-        Object.entries(frames).forEach(([frame, data]) => {
-          images.push(data);
-        });
-      });
-      const encoder = new Encoder(images);
-      fs.writeFileSync(path.join(OUTPUT_DIRECTORY, 'cursors', name), Buffer.from(encoder.pack()));
-    });
+    const generateVariant = (variant) => {
+      const defaultSlug = `${THEME_NAME}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const slug = `${THEME_NAME}${variant === 'default' ? '' : `-${variant}`}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      
+      fs.mkdirSync(path.join(OUTPUT_DIRECTORY, slug, 'cursors'), { recursive: true });
+
+      if (variant !== 'default') {
+        for (const cursorName in cursors.default) {
+          if (!cursors[variant][cursorName]) {
+            fs.symlinkSync(
+              path.relative(
+                path.join(OUTPUT_DIRECTORY, slug, 'cursors'),
+                path.join(OUTPUT_DIRECTORY, defaultSlug, 'cursors', cursorName)
+              ),
+              path.join(OUTPUT_DIRECTORY, slug,'cursors', cursorName)
+            );
+          }
+        }
+      }
     
-    fs.writeFileSync(
-      path.join(OUTPUT_DIRECTORY, 'index.theme'),
-      `[Icon Theme]\nName=${THEME_NAME}\n${THEME_COMMENT ? `Comment=${THEME_COMMENT}\n` : ''}`
-    );
+      Object.entries(cursors[variant]).forEach(([name, sizes]) => {
+        const images = [];
+        Object.entries(sizes).forEach(([size, frames]) => {
+          Object.entries(frames).forEach(([frame, data]) => {
+            images.push(data);
+          });
+        });
+        const encoder = new Encoder(images);
+        fs.writeFileSync(
+          path.join(OUTPUT_DIRECTORY, slug, 'cursors', name),
+          Buffer.from(encoder.pack())
+        );
+      });
+      
+      fs.writeFileSync(
+        path.join(OUTPUT_DIRECTORY, slug, 'index.theme'),
+        `[Icon Theme]\nName=${THEME_NAME}${variant === 'default' ? '' : ` - ${variant}`}\n${THEME_COMMENT ? `Comment=${THEME_COMMENT}\n` : ''}`
+      );
+    }
+
+    generateVariant('default');
+
+    for (const variant of Object.keys(cursors)) {
+      if (variant !== 'default') {
+        generateVariant(variant);
+      }
+    }
 
   } catch (error) {
     core.setFailed(error.message);
