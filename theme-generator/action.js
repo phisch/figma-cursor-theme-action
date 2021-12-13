@@ -90,7 +90,9 @@ var Encoder = require('xcursor').Encoder;
       Object.entries(cursors[variant]).forEach(([name, sizes]) => {
         const images = [];
         Object.entries(sizes).forEach(([size, frames]) => {
+          const animated = Object.keys(frames).length > 1;
           Object.entries(frames).forEach(([frame, data]) => {
+            data.delay = animated ? data.delay : 50;
             images.push(data);
           });
         });
