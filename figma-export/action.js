@@ -22,6 +22,7 @@ try {
   });
 
   if (!fs.existsSync(OUTPUT_DIRECTORY)) {
+    core.info(`Created output directory '${OUTPUT_DIRECTORY}'.`);
     fs.mkdirSync(OUTPUT_DIRECTORY, { recursive: true });
   }
 
@@ -54,17 +55,24 @@ try {
       }
     };
 
+    core.info(`Collecting information about the Figma file ${FIGMA_FILE_KEY}.`);
     iterate(file.data.document);
 
+    core.info(`Found ${Object.keys(exports).length} export formats.`);
+
     Object.keys(exports).forEach(format => {
+      core.info(`Found ${Object.keys(exports[format]).length} ${format} scales.`);
       Object.keys(exports[format]).forEach(scale => {
+        core.info(`Requesting ${format} exports for ${scale} scale.`);
         client.fileImages(FIGMA_FILE_KEY, {
           ids: Object.keys(exports[format][scale]),
           scale: scale,
           format: format.toLowerCase()
         }).then(imagesResponse => {
+          core.info(`Downloading ${imagesResponse.data.images.length} images for ${format} at ${scale} scale.`);
           Object.keys(imagesResponse.data.images).forEach(id => {
             const url = imagesResponse.data.images[id];
+            core.debug(`Downloading ${url} to ${exports[format][scale][id].file}.`);
             https.get(url, (response) => {
               if (response.statusCode !== 200) {
                 throw Error(`Failed to download image from ${url}!`);
