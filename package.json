@@ -1,30 +1,27 @@
 {
-  "name": "@phisch/figma-export-action",
-  "version": "0.0.1",
-  "description": "GitHub Action that renders and downloads all defined exports of a Figma file that doesn't contain any conflicting exports.",
-  "main": "action.js",
+  "name": "@phisch/figma-cursor-theme-action",
+  "version": "0.6.0",
+  "description": "GitHub Action that generates a cursor theme and exports additional assets from a Figma file.",
   "scripts": {
-    "build-figma-export": "ncc build figma-export/action.js -o dist/figma-export --minify --source-map --license licenses.txt",
-    "build-theme-generator": "ncc build theme-generator/action.js -o dist/theme-generator --minify --source-map --license licenses.txt",
-    "build": "npm run build-figma-export && npm run build-theme-generator",
-    "figma-export": "node figma-export/action.js",
-    "theme-generator": "node theme-generator/action.js"
+    "start": "node action.js",
+    "build": "ncc build action.js --minify --license licenses.txt"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phisch/figma-export-action.git"
+    "url": "git+https://github.com/phisch/figma-cursor-theme-action.git"
   },
   "keywords": [
     "github-action",
     "figma",
-    "export"
+    "cursor-theme",
+    "xcursor"
   ],
   "author": "Philipp Schaffrath",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/phisch/figma-export-action/issues"
+    "url": "https://github.com/phisch/figma-cursor-theme-action/issues"
   },
-  "homepage": "https://github.com/phisch/figma-export-action#readme",
+  "homepage": "https://github.com/phisch/figma-cursor-theme-action#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.0",
