@@ -67,5 +67,10 @@ The alias component is used to create cursor symlinks. This is helpful to link l
 | `alias` | string | Name of the alias. This will be the file name of the symlink. |
 | `name` | string | Name of the cursor this is an alias for. This will be the symlink target. |
 
+### Exports
+Any export defined in the figma file will be exported to the `export_directory`. This can be used to get up to date previews of the cursor theme.
+
+In addition to that, a SVG version of every sprite is generated into the `svg_directory`.
+
 ### Component Set ID
 To aquire the component set ID, click the component and take it from the `node-id` parameter in the URL `https://www.figma.com/file/:key/template?node-id=:node-id`. This parameter is URL encoded, so make sure to replace `%3A` with `:`. A valid component set ID looks like: `13:37`
