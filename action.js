@@ -111,34 +111,35 @@ const { Encoder } = require('xcursor');
       sprites[id] = { ...parseProperties(spriteComponent.name), images: {} };
     });
 
-    [1, 2, 4].forEach(async (scale) => {
+    await Promise.all([1, 2, 4].map(async (scale) => {
       core.info(`Requesting Figma export for sprites at scale ${scale}x.`);
-      await client.fileImages(FIGMA_FILE_KEY, {
+      const response = await client.fileImages(FIGMA_FILE_KEY, {
         ids: Object.keys(spriteComponents),
         scale,
         format: 'png',
-      }).then(async (imagesResponse) => {
-        core.info(`Received ${Object.keys(imagesResponse.data.images).length} image urls for scale ${scale}x, downloading them now.`);
-        const images = await pixels.all(imagesResponse.data.images);
-        Object.entries(images).forEach(([id, image]) => {
-          if (image.width !== image.height) {
-            throw Error(`Image with id '${id}' is not square at scale ${scale}.`);
-          }
-          const { data } = image;
-          for (let i = 0; i < data.length; i += 4) {
-            const temp = image.data[i];
-            data[i] = image.data[i + 2];
-            data[i + 2] = temp;
-          }
-          sprites[id].images[image.width] = {
-            scale,
-            data,
-          };
-        });
-      }).catch((error) => {
-        core.setFailed(error.message);
       });
-    });
+      if (response.status !== 200) {
+        throw Error(`Failed to fetch file images with status code ${response.status}.`);
+      }
+      core.info(`Received ${Object.keys(response.data.images).length} image urls for scale ${scale}x, downloading them now.`);
+      const imageFiles = await pixels.all(response.data.images);
+      Object.entries(imageFiles).forEach(([id, image]) => {
+        if (image.width !== image.height) {
+          throw Error(`Image with id '${id}' is not square at scale ${scale}.`);
+        }
+        const { data } = image;
+        for (let i = 0; i < data.length; i += 4) {
+          const temp = image.data[i];
+          data[i] = image.data[i + 2];
+          data[i + 2] = temp;
+        }
+        sprites[id].images[image.width] = {
+          scale,
+          data,
+        };
+      });
+      Promise.resolve();
+    }));
 
     const svgDirectory = path.join(OUTPUT_DIRECTORY, 'svg');
     core.setOutput('svg_directory', svgDirectory);
