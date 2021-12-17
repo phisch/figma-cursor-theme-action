@@ -36,5 +36,5 @@ outputs:
     description: 'Directory containing all sprites rendered as svg files.'
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
