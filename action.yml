@@ -1,5 +1,5 @@
 name: 'Figma Cursor Theme Generator'
-description: 'GitHub Action that generates a cursor theme from a Figma file, and exports additional assets.'
+description: 'GitHub Action that generates a cursor theme from a Figma file.'
 inputs:
   figma_access_token:
     description: 'Your personal Figma access token.'
@@ -21,19 +21,17 @@ inputs:
     description: 'Short comment or description of the cursor theme.'
     required: false
     default: 'This is a generated cursor theme.'
-  output_directory:
-    description: 'The directory to download assets and generate the cursor theme into.'
-    required: false
-    default: 'build'
+  theme_directory:
+    description: 'Output directory for the cursor theme variants.'
+    required: true
+    default: build/themes
+  export_directory:
+    description: 'Output directory for exports defined in the Figma file.'
+  svg_directory:
+    description: 'Output directory for SVG images of all cursor sprites.'
 outputs:
   version:
     description: 'The current version of the Figma file.'
-  theme_directory:
-    description: 'Directory containing the generated cursor theme and its variants.'
-  export_directory:
-    description: 'Directory containing exports defined in the Figma file.'
-  svg_directory:
-    description: 'Directory containing all sprites rendered as svg files.'
 
 runs:
   using: 'node16'
