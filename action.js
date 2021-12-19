@@ -138,8 +138,12 @@ const got = require('got');
             .raw()
             .toBuffer();
           for (let i = 0; i < rawBuffer.length; i += 4) {
-            const red = rawBuffer[i];
-            rawBuffer[i] = rawBuffer[i + 2];
+            const alpha = rawBuffer[i + 3];
+            const red = Math.round(rawBuffer[i] * (alpha / 255));
+            const green = Math.round(rawBuffer[i + 1] * (alpha / 255));
+            const blue = Math.round(rawBuffer[i + 2] * (alpha / 255));
+            rawBuffer[i] = blue;
+            rawBuffer[i + 1] = green;
             rawBuffer[i + 2] = red;
           }
           sprites[id].images[meta.width * scale] = { scale, buffer: rawBuffer };
