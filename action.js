@@ -103,6 +103,7 @@ const got = require('got');
         scale: 1,
         format: 'svg',
         svg_simplify_stroke: false,
+        use_absolute_bounds: true,
       });
       if (response.status !== 200) {
         throw Error(`Failed to fetch file images with status code ${response.status}.`);
