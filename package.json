@@ -24,10 +24,12 @@
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.0",
+    "@svgdotjs/svg.js": "^3.1.2",
     "figma-js": "^1.14.0",
     "fs-extra": "^10.0.0",
     "got": "^11.8.2",
     "sharp": "^0.29.3",
+    "svgdom": "^0.1.10",
     "xcursor": "^1.1.7"
   },
   "devDependencies": {
