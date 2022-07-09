@@ -2,8 +2,11 @@
   "name": "@phisch/figma-cursor-theme-action",
   "description": "GitHub Action that generates a cursor theme from a Figma file.",
   "scripts": {
-    "start": "node action.js",
-    "build": "ncc build action.js --minify --license licenses.txt"
+    "compile": "tsc",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build build/main.js --source-map --license licenses.txt",
+    "build": "npm run compile && npm run lint && npm run package",
+    "start": "ts-node src/main.ts"
   },
   "repository": {
     "type": "git",
@@ -23,19 +26,22 @@
   "homepage": "https://github.com/phisch/figma-cursor-theme-action#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "@actions/github": "^5.0.0",
     "@svgdotjs/svg.js": "^3.1.2",
-    "figma-js": "^1.14.0",
-    "fs-extra": "^10.0.0",
-    "got": "^11.8.2",
-    "sharp": "^0.29.3",
+    "@types/sharp": "^0.30.2",
+    "axios": "^0.27.2",
+    "figma-api": "^1.10.1",
+    "sharp": "^0.30.4",
     "svgdom": "^0.1.10",
+    "toml": "^3.0.0",
     "xcursor": "^1.1.7"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.33.0",
-    "eslint": "^8.4.1",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.3"
+    "@types/node": "^17.0.31",
+    "@typescript-eslint/parser": "^5.22.0",
+    "@vercel/ncc": "^0.33.4",
+    "eslint": "^8.14.0",
+    "eslint-plugin-github": "^4.3.6",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
   }
 }

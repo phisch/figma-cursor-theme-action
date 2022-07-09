@@ -2,12 +2,12 @@ const core = require('@actions/core');
 const fs = require('fs-extra');
 const util = require('util');
 
-const FigmaExporter = require('./src/figma-exporter');
-const CursorTheme = require('./src/cursor-theme');
-const XCursorThemeGenerator = require('./src/x-cursor-theme-creator');
-const Sprite = require('./src/sprite');
-const Cursor = require('./src/cursor');
-const Variant = require('./src/variant');
+const FigmaExporter = require('./src_old/figma-exporter');
+const CursorTheme = require('./src_old/cursor-theme');
+const XCursorThemeGenerator = require('./src_old/x-cursor-theme-creator');
+const Sprite = require('./src_old/sprite');
+const Cursor = require('./src_old/cursor');
+const Variant = require('./src_old/variant');
 
 const { SVG, registerWindow, Timeline, Runner } = require('@svgdotjs/svg.js');
 const { createSVGWindow } = require('svgdom');
