@@ -29,6 +29,9 @@ inputs:
     description: 'Output directory for exports defined in the Figma file.'
   svg_directory:
     description: 'Output directory for SVG images of all cursor sprites.'
+  scales:
+    description: 'List of target scales the cursors will be rendered at.'
+    default: '1, 2, 4'
 outputs:
   version:
     description: 'The current version of the Figma file.'
