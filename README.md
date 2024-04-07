@@ -1,5 +1,8 @@
 # Figma Cursor Theme Generator
 
+> [!IMPORTANT]  
+> This project is replaced by [Cursor Theme Generator](https://github.com/phisch/cursor-theme-builder). Please use that instead!
+
 GitHub Action that generates a cursor theme from a Figma file. It can also generates cursor theme variants and cursor aliases, download SVG assets for all cursor sprites and download exports.
 
 ## Inputs
